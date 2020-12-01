@@ -2,13 +2,13 @@
 
 
 ### --- Part 1 ---
-After saving Christmas five years in a row, you've decided to take a vacation at a nice resort on a tropical island. Surely, Christmas will go on without you.
+After saving Christmas <span style="color:green">five years in a row</span>, you've decided to take a vacation at a nice resort on a tropical island. Surely, Christmas will go on without you.
 
-The tropical island has its own currency and is entirely cash-only. The gold coins used there have a little picture of a starfish; the locals just call them stars. None of the currency exchanges seem to have heard of them, but somehow, you'll need to find fifty of these coins by the time you arrive so you can pay the deposit on your room.
+The tropical island has its own currency and is entirely cash-only. The gold coins used there have a little picture of a starfish; the locals just call them <span style="color:yellow">stars</span>. None of the currency exchanges seem to have heard of them, but somehow, you'll need to find fifty of these coins by the time you arrive so you can pay the deposit on your room.
 
-To save your vacation, you need to get all fifty stars by `December 25th`.
+To save your vacation, you need to get all <span style="color:yellow">fifty stars</span>. by `December 25th`.
 
-Collect stars by solving puzzles. Two puzzles will be made available on each day in the Advent calendar; the second puzzle is unlocked when you complete the first. Each puzzle grants one star. Good luck!
+Collect stars by solving puzzles. Two puzzles will be made available on each day in the Advent calendar; the second puzzle is unlocked when you complete the first. Each puzzle grants <span style="color:yellow">one star</span>. Good luck!
 
 Before you leave, the Elves in accounting just need you to fix your expense report (your puzzle input); apparently, something isn't quite adding up.
 
@@ -40,5 +40,5 @@ Using the above example again, the three entries that sum to `2020` are `979`, `
 
 *Your puzzle answer was `49214880`.*
 
-Both parts of this puzzle are complete! They provide two gold stars: **
+<span style="color:yellow">Both parts of this puzzle are complete! They provide two gold stars: **</span>
 
