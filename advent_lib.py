@@ -1,3 +1,9 @@
+HEADER = '\033[95m'
+OKGREEN = '\033[92m'
+WARNING = '\033[93m'
+FAIL = '\033[91m'
+ENDC = '\033[0m'
+
 
 # Reads each number on each line in file and return list
 def read_lines(filename, f=int):
@@ -21,3 +27,6 @@ if __name__ == "__main__":
     print(read_string("test_input/2.txt"))
     print(read_sep("test_input/3.txt", ",", int))
     print(read_line_sep("test_input/4.txt", ",", str))
+
+
+
