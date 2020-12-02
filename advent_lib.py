@@ -37,6 +37,14 @@ def read_lines_sep(filename, sep=None, f=str, use_file=True):
     return [[f(s.strip()) for s in x.split(sep)] for x in filename.split("\n")[:-1]]
 
 
+# Pretty prints the results
+def pretty_print(part_1, part_2):
+    print(f"\n{WARNING}RESULTS:\n------------------------------------{ENDC}")
+    print(f"{HEADER}Part 1: {OKGREEN} {part_1}{ENDC}")
+    print(f"{HEADER}Part 2: {OKGREEN} {part_2}{ENDC}")
+    print(f"{WARNING}------------------------------------\n{ENDC}")
+
+
 
 if __name__ == "__main__":
     print(read_lines("test_input/1.txt", int))

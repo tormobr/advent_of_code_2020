@@ -20,7 +20,4 @@ def part_2():
 
 
 if __name__ == "__main__":
-    print(f"\n{WARNING}RESULTS:\n------------------------------------{ENDC}")
-    print(f"{HEADER}Part 1: {OKGREEN} {part_1()}{ENDC}")
-    print(f"{HEADER}Part 2: {OKGREEN} {part_2()}{ENDC}")
-    print(f"{WARNING}------------------------------------\n{ENDC}")
+    pretty_print(part_1(), part_2())
