@@ -6,27 +6,43 @@ ENDC = '\033[0m'
 
 
 # Reads each number on each line in file and return list
-def read_lines(filename, f=int):
-    return [f(l.strip()) for l in open(filename)]
+def read_lines(filename, f=int, use_file=True):
+    if use_file:
+        return [f(l.strip()) for l in open(filename)]
+
+    return [f(l.strip()) for l in filename.split("\n")[:-1]]
+
 
 # Read a file as string
-def read_string(filename):
-    return open(filename).read()
+def read_string(filename, use_file=True):
+    if use_file:
+        return open(filename).read()
+
+    return filename
+
 
 # Reads file and splits on seperator
-def read_sep(filename, sep, f=int):
-    return [f(x.strip()) for x in open(filename).read().split(sep)]
+def read_sep(filename, sep, f=str, use_file=True):
+    if use_file:
+        return [f(x.strip()) for x in open(filename).read().split(sep)]
+
+    return [f(x.strip()) for x in filename.split(sep)]
+
 
 # Reads each line and seperate items on line into 2D array
-def read_line_sep(filename, sep, f=str):
-    return [[f(s.strip()) for s in x.split(sep)] for x in open(filename)]
+def read_lines_sep(filename, sep=None, f=str, use_file=True):
+    if use_file:
+        return [[f(s.strip()) for s in x.split(sep)] for x in open(filename)]
+
+    return [[f(s.strip()) for s in x.split(sep)] for x in filename.split("\n")[:-1]]
+
 
 
 if __name__ == "__main__":
     print(read_lines("test_input/1.txt", int))
     print(read_string("test_input/2.txt"))
     print(read_sep("test_input/3.txt", ",", int))
-    print(read_line_sep("test_input/4.txt", ",", str))
+    print(read_lines_sep("test_input/4.txt", ",", str))
 
 
 
