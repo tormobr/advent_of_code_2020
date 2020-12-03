@@ -22,3 +22,13 @@ This repo contains the solutions to the problems from [advent of code](https://a
 - Get number of valid passwords that meet new criteria. Letter must be at specific index.
 
 ---
+
+### --- Day 3: Toboggan Trajectory ---
+
+#### Part 1
+- Find numbers of trees in path
+
+#### Part 2
+- Find number of trees in multiple paths
+
+---
