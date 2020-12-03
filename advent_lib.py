@@ -39,8 +39,12 @@ def read_sep(filename, sep=None, f=str, use_file=True):
 # Reads each line and seperate items on line into 2D array
 def read_lines_sep(filename, sep=None, f=str, use_file=True):
     if use_file:
+        if sep == "":
+            return [[f(c) for c in s.strip()] for s in open("input.txt")]
         return [[f(s.strip()) for s in x.split(sep)] for x in open(filename)]
 
+    if sep == "":
+        return [[f(c) for c in s.strip()] for s in filename]
     return [[f(s.strip()) for s in x.split(sep)] for x in filename.split("\n")[:-1]]
 
 # Prints array items
