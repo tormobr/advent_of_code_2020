@@ -12,6 +12,15 @@ ENDC = '\033[0m'
 
 WHITE_SQUARE = "\u25a0"
 
+DIRECTIONS = {
+    "R": (0, 1),
+    "D": (1, 0),
+    "L": (0, -1),
+    "U": (-1, 0)
+}
+
+SPIN_DIRS = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
 # Reads each number on each line in file and return list
 def read_lines(filename, f=int, use_file=True):
     if use_file:
@@ -74,13 +83,13 @@ def plot_matrix(m, cmap="plasma"):
 
 # Creates an animation from a set of matrices from the constructor
 # Used for grid layout that changes
-def animate(arrays, filename="ani.gif", save=False, border_width=1, fps=60, greys=False):
-    cmap1 = colors.ListedColormap(['darkgrey','white', 'black'])
+def animate(arrays, filename="ani.gif", save=False, border_width=1, fps=60, cmap=["darkgray", "white", "black"]):
+    cmap1 = colors.ListedColormap(cmap)
     arrays = arrays
     fig, (ax) = plt.subplots()
     fig.tight_layout()
     ax.set_aspect('equal', adjustable='box')
-    mat = ax.pcolormesh(arrays[0], edgecolor="lightgrey", cmap=cmap1 if greys else "plasma", linewidth=border_width)
+    mat = ax.pcolormesh(arrays[0], edgecolor="lightgrey", cmap=cmap1, linewidth=border_width)
     ani = animation.FuncAnimation(fig, lambda i: mat.set_array(arrays[i]), interval=10,frames=len(arrays)-1)
     plt.gca().invert_yaxis()
     ax.axis("off")
