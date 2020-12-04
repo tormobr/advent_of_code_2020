@@ -70,12 +70,12 @@ def is_valid_cid(p):
 
      
 def part_1():
-    PW = get_passwords()
-    return sum(is_valid_1(p) for p in PW)
+    PP = get_passwords()
+    return sum(is_valid_1(p) for p in PP)
 
 def part_2():
-    PW = get_passwords()
-    return sum(is_valid_2(p) for p in PW)
+    PP = get_passwords()
+    return sum(is_valid_2(p) for p in PP)
 
 
 if __name__ == "__main__":

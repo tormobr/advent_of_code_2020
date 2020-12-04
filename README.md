@@ -32,3 +32,13 @@ This repo contains the solutions to the problems from [advent of code](https://a
 - Find number of trees in multiple paths
 
 ---
+
+### --- Day 4: Passport Processing ---
+
+#### Part 1
+- Find number of passports that have all fields except for optional `cid`
+
+#### Part 2
+- Find number of passports the meets requirements from part 1 and in addition has requirements for each field in the passport
+
+---
