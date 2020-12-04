@@ -40,28 +40,22 @@ def is_valid_eyr(p):
     return 2020 <= int(p["eyr"]) <= 2030
 
 def is_valid_hgt(p):
-    if "cm" in p["hgt"]:
-        s = int(p["hgt"].replace("cm", ""))
-        if s >= 150 and s <= 193:
-            return True
-    elif "in" in p["hgt"]:
-        s = int(p["hgt"].replace("in", ""))
-        if s >= 59 and s <= 76:
-            return True
+    if re.match(r"(^(1[5-8]\d|19[0-3])cm$|^(([5-6]\d|7[0-6])in)$)", p["hgt"]):
+        return True
     return False
 
 def is_valid_hcl(p):
-    if not re.match(r"^#[\d|a-f]{6}$", p["hcl"]):
-        return False
-    return True
+    if re.match(r"^#[\d|a-f]{6}$", p["hcl"]):
+        return True
+    return False
 
 def is_valid_ecl(p):
     return p["ecl"] in ["amb", "blu", "brn", "gry", "grn", "hzl", "oth"]
 
 def is_valid_pid(p):
-    if not re.match("^\d{9}$", p["pid"]):
-        return False
-    return True
+    if re.match("^\d{9}$", p["pid"]):
+        return True
+    return False
 
 def is_valid_cid(p):
     return True
