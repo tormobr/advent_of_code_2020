@@ -54,7 +54,7 @@ def read_lines_sep(filename, sep=None, f=str, use_file=True):
 
     if sep == "":
         return [[f(c) for c in s.strip()] for s in filename]
-    return [[f(s.strip()) for s in x.split(sep)] for x in filename.split("\n")[:-1]]
+    return [[f(s.strip()) for s in x.strip().split(sep)] for x in filename.split("\n")[:-1]]
 
 # Prints array items
 def print_arr(arr):
