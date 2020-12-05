@@ -1,3 +1,4 @@
+import time
 import os
 from matplotlib import pyplot as plt
 from matplotlib import animation,colors
@@ -87,23 +88,28 @@ def plot_matrix(m, cmap="plasma"):
 
 # Creates an animation from a set of matrices from the constructor
 # Used for grid layout that changes
-def animate(arrays, filename="ani.gif", save=False, border_width=1, fps=60, cmap=["darkgray", "white", "black"]):
+def animate(arrays, filename="ani.mp4", save=False, border_width=2, fps=60, cmap=["darkgray", "white", "black"], aspect_ratio=0.4):
+    #ax.figure(figsize=(20,10))
     cmap1 = colors.ListedColormap(cmap)
     arrays = arrays
     fig, (ax) = plt.subplots()
     fig.tight_layout()
-    ax.set_aspect('equal', adjustable='box')
-    mat = ax.pcolormesh(arrays[0], edgecolor="lightgrey", cmap=cmap1, linewidth=border_width)
-    ani = animation.FuncAnimation(fig, lambda i: mat.set_array(arrays[i]), interval=10,frames=len(arrays)-1)
+    fig.set_size_inches(18.5, 10.5)
+    ax.set_aspect(aspect_ratio, adjustable='box')
+    plts = []
+    for a in arrays:
+        mat = ax.pcolormesh(a, edgecolor="lightgrey", cmap=cmap1, linewidth=border_width)
+        plts.append([mat])
+    ani = animation.ArtistAnimation(fig, plts, blit=True, interval=10)
     plt.gca().invert_yaxis()
     ax.axis("off")
     plt.show()
-
+    return 
     if save:
         cwd = os.getcwd()
         if "animations" not in os.listdir(cwd):
             os.mkdir("animations")
-        ani.save(f"animations/{filename}", fps=fps, writer="ffmpeg", dpi=200)
+        ani.save(f"animations/{filename}")
 
 
 
