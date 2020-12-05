@@ -56,6 +56,10 @@ def read_lines_sep(filename, sep=None, f=str, use_file=True):
         return [[f(c) for c in s.strip()] for s in filename]
     return [[f(s.strip()) for s in x.strip().split(sep)] for x in filename.split("\n")[:-1]]
 
+# Finds all the integers in string
+def ints(s):
+    return re.findall(r"-?\d+", s)
+
 # Prints array items
 def print_arr(arr):
     for x in arr:
