@@ -1,11 +1,4 @@
-import math
-from collections import deque, defaultdict
-from functools import reduce
-from operator import mul
-import itertools
 import numpy as np
-import re
-
 import sys
 sys.path.insert(0,'..')
 from advent_lib import *
