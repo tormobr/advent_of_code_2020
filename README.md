@@ -50,6 +50,6 @@ This repo contains the solutions to the problems from [advent of code](https://a
 
 #### Part 2
 - Find "your" seat. The seat that is missing from the data. (not at the beginning or end)
-![alt](05/animations/ani.gif)
+![alt](05/animations/viz.gif)
 
 ---
