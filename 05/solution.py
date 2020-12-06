@@ -5,25 +5,26 @@ from advent_lib import *
 
 # Gets the ids from the input data
 def extract_ids():
-    # Animation stuff   -------------
+    # Animation stuff   ----------------------
     arrays = []
     grid = np.zeros((8, 128))
-    # -------------------------------
+    # ----------------------------------------
     data = read_lines("input.txt", f=str)
     res = []
     for s in data:
         row = sum([int(c=="B") << 6-i for i, c in enumerate(s[:7])])
         col = sum([int(c=="R") << 2-i for i, c in enumerate(s[7:])])
         res.append(row * 8 + col)
-        # Animation stuff   -------------
+
+    # Animation stuff   -------------------------------------
         grid[col, row] = 1
         arrays.append(grid.copy())
-        # -------------------------------
     
     # Set "my" seat to orange and duplicate last frame some times
     grid[5, 81] = 2
     for _ in range(250):
         arrays.append(grid.copy())
+    # -------------------------------------------------------
 
 
     res.sort()
