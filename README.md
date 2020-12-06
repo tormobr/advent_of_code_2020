@@ -42,3 +42,14 @@ This repo contains the solutions to the problems from [advent of code](https://a
 - Find number of passports the meets requirements from part 1 and in addition has requirements for each field in the passport
 
 ---
+
+### --- Day 5: Passport Processing ---
+
+#### Part 1
+- Find the seat ID with the highest possible ID
+
+#### Part 2
+- Find "your" seat. The seat that is missing from the data. (not at the beginning or end)
+![alt](05/animations/ani.gif)
+
+---
