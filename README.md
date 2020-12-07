@@ -53,3 +53,13 @@ This repo contains the solutions to the problems from [advent of code](https://a
 ![alt](05/animations/viz.gif)
 
 ---
+
+### --- Day 6: Custom Customs ---
+
+#### Part 1
+- Find the number of questions anyone answered "yes" to in each group, and get sum of all groups
+
+#### Part 2
+- Get the number of questions everyone in the group answered yes to. And return sum of sums
+
+---
