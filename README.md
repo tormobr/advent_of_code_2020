@@ -5,11 +5,41 @@ This repo contains the solutions to the problems from [advent of code](https://a
 
 ### --- Day 1: Report Repair ---
 
+### Input 
+The input for this day is simply a file with integers, seperated by a newline(`\n`).
+
+f.eks.
+```
+1721
+979
+366
+299
+675
+1456
+```
+
+I used a list comprehension to read the lines and store the integers in an array
+``` python
+numbers = [int(l.strip()) for l in open("input.txt")]
+```
+
 #### Part 1
-- Find all the two entries that add up to 2020 and return the product
+To solve this part I used `itertools.combinations`. this functions allows us to generate r length subsequences of elements from the input iterable. This means we can pass in the `numbers` and set the `r` parameter to `2` and get all the combinations with two elements.
+```
+combinations = itertools.combinations(numbers, 2)
+```
+
+The next part is to simply iterate through these combinations and look for the combinations where the sum is equal to `2020` and return the product.
+```
+part1_ans = [reduce(mul, c) for c in combinations if sum(c) == 2020]
+```
+Even though this would create a list with all the combinations where the sum is `2020` the length of the list should only be `1` element if the input data is correct.
 
 #### Part 2
-- This time find three numbers that add up to 2020 and return product
+For part 2 of this day we only have to change one single character. Instead of combinations of length `2` we want combinations with length `3`. This is simply done by changing the `r` argument of `combinations` 
+```
+combinations = itertools.combinations(numbers, 3)
+```
 
 ---
 
