@@ -25,19 +25,19 @@ numbers = [int(l.strip()) for l in open("input.txt")]
 
 #### Part 1
 To solve this part I used `itertools.combinations`. this functions allows us to generate r length subsequences of elements from the input iterable. This means we can pass in the `numbers` and set the `r` parameter to `2` and get all the combinations with two elements.
-```
+```python
 combinations = itertools.combinations(numbers, 2)
 ```
 
 The next part is to simply iterate through these combinations and look for the combinations where the sum is equal to `2020` and return the product.
-```
+```python
 part1_ans = [reduce(mul, c) for c in combinations if sum(c) == 2020]
 ```
 Even though this would create a list with all the combinations where the sum is `2020` the length of the list should only be `1` element if the input data is correct.
 
 #### Part 2
 For part 2 of this day we only have to change one single character. Instead of combinations of length `2` we want combinations with length `3`. This is simply done by changing the `r` argument of `combinations` 
-```
+```python
 combinations = itertools.combinations(numbers, 3)
 ```
 
