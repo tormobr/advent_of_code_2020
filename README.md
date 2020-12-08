@@ -4,6 +4,7 @@ This repo contains the solutions to the problems from [advent of code](https://a
 ---
 
 ## --- Day 1: Report Repair ---
+[Solution!](./01/solution.py)
 
 ### Input 
 The input for this day is simply a file with integers, seperated by a newline(`\n`).
