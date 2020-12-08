@@ -291,7 +291,7 @@ BBFFBBFRLL
 
 ### Part 1
 First thing we need to do is to extract the seat ID from a string. We start looking at the row.
-We know that `F` means select the lower half of the interval, and `B` means select the higher half of the interval`. I quickly discovered that we can directly map the `F` and the `B` characters in the string to the bits in a byte. This means a `B` at position `0` in the string would result in setting bit 7 in a byte to 1. I applied this strategy and it worked perfectly.
+We know that `F` means select the lower half of the interval, and `B` means select the higher half of the interval. I quickly discovered that we can directly map the `F` and the `B` characters in the string to the bits in a byte. This means a `B` at position `0` in the string would result in setting bit 7 in a byte to 1. I applied this strategy and it worked perfectly.
 
 A row number can then be extracted with the following code:
 
