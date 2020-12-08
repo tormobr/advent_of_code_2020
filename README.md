@@ -302,7 +302,7 @@ row = sum([int(c=="B") << 6-i for i, c in enumerate(s[:7])])
 The process for the columns are exactly the same, except we are only dealing with 3 bits, instad of 8.
 ```python
 col = sum([int(c=="R") << 2-i for i, c in enumerate(s[7:])])
-``
+```
 
 After this is extracted we can simply calculate the ID with `row * 8 + col`
 
