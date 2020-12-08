@@ -48,6 +48,7 @@ combinations = itertools.combinations(numbers, 3)
 
 
 ## --- Day 2: Password Philosophy ---
+[Solution!](./02/solution.py)
 
 ### Input 
 The second day input is a bit more complicated than the first one. The input for day `2` consist of mutiple lines, where each line contains a integer range, a character, and a string.
@@ -65,8 +66,9 @@ s = open("input.txt").read()
 ```
 
 After this I used a simple regex to modify each line in the input.
-```
-1-3 a: abcde -> 1 3 a abcde
+```python
+s = re.sub(r"-|:", " ", read_string("input.txt"))
+# 1-3 a: abcde -> 1 3 a abcde
 ```
 This is done to make it easier to split each line and extract the information. Now I can simply use `split()` to end up with something like:
 ```
@@ -108,6 +110,7 @@ return sum([(p[int(s)-1]==c) ^ (p[int(e)-1]==c) for s,e,c,s in all_lines])
 
 
 ## --- Day 3: Toboggan Trajectory ---
+[Solution!](./03/solution.py)
 
 ### Input
 The input for this task consist of mutiple lines of strings. Each character in a line is either a `#` or a  `.`. All the lines together make up a grid, where `#` represents a tree and `.` represents an empty space. See example under.
@@ -167,20 +170,108 @@ return reduce(mul, [sum(grid[i * dy][(i * dx) % W] == "#" for i in range(H // dy
 
 
 ## --- Day 4: Passport Processing ---
+[Solution!](./04/solution.py)
+
+### Input
+The input for this day is a lot of passports and their information. Each passport is separated by a line with an empty newline(`\n`). For each passport there are a lot of fields with information. A field is represented as: `key:value` in the string.
+
+Example input:
+```
+ecl:gry pid:860033327 eyr:2020 hcl:#fffffd
+byr:1937 iyr:2017 cid:147 hgt:183cm
+
+iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884
+hcl:#cfa07d byr:1929
+
+hcl:#ae17e1 iyr:2013
+eyr:2024
+ecl:brn pid:760753108 byr:1931
+hgt:179cm
+
+hcl:#cfa07d eyr:2025 pid:166559648
+iyr:2011 ecl:brn hgt:59in
+```
+
+As we can see fields within the same passport can be on different lines as well. To make it a bit easier I simplified the input using some regex in the beginning.
+```python
+text = open("input.txt").read()
+text = re.sub(r"(.)\n", r"\1 ", text)
+```
+After this regex substitution the input looks like this: 
+
+```
+ecl:gry pid:860033327 eyr:2020 hcl:#fffffd byr:1937 iyr:2017 cid:147 hgt:183cm
+iyr:2013 ecl:amb cid:350 eyr:2023 pid:028048884 hcl:#cfa07d byr:1929
+hcl:#ae17e1 iyr:2013 eyr:2024 ecl:brn pid:760753108 byr:1931 hgt:179cm
+hcl:#cfa07d eyr:2025 pid:166559648 iyr:2011 ecl:brn hgt:59in
+```
+
+Each of the lines now represents a full passport.
+The next step was to iterate through the lines and store all the passports. For each passport I created a dictionary with all its entries, and appended this to a list.
+```python
+lines = [[tuple(s.split(":")) for s in l.split()] for l in text.split("\n")]
+passwords = [{k: v for k, v in l} for l in lines]
+```
+
+After this the `passsports` variable is a list with dictionaries.
 
 ### Part 1
-- Find number of passports that have all fields except for optional `cid`
+After creating the solid datastructure this part was really easy. All i had to do here was to iterate through the passports, and check the length of each dict. There are 2 cases where a passport is valid; all fields are there, or `cid` is missing. This simple check takes care of that.
+
+```python
+def is_valid_1(p):
+    return len(p) == 8 or len(p.keys()) == 7 and "cid" not in p.keys()
+```
+
+After defining this function we can simply do:
+```python
+sum(is_valid_1(p) for p in passports)
+```
+
 
 ### Part 2
-- Find number of passports the meets requirements from part 1 and in addition has requirements for each field in the passport
+In this part the criteria for a valid passport is more strict. In addition to the requirements from part 1 there are some extra ones for each field. here is a list of requirements:
 
+- `byr` (Birth Year) - four digits; at least `1920` and at most `2002`.
+- `iyr` (Issue Year) - four digits; at least `2010` and at most `2020`.
+- `eyr` (Expiration Year) - four digits; at least `2020` and at most `2030`.
+- `hgt` (Height) - a number followed by either `cm` or `in`:
+    - If `cm`, the number must be at least `150` and at most `193`.
+    - If `in`, the number must be at least `59` and at most `76`.
+    `hcl` (Hair Color) - a # followed by exactly six characters `0-9 or a-f`.
+- `ecl` (Eye Color) - exactly one of: `amb` `blu` `brn` `gry` `grn` `hzl` `oth`.
+- `pid` (Passport ID) - a nine-digit number, including leading zeroes.
+- `cid` (Country ID) - ignored, missing or not.
 
+There are basically 3 different categories of check that are suitable in my opinion.
+1. A range - `byr`, `iyr` and `eyr` 
+2. String mathing - `hgt`, `pid` and `hcl`
+3. Sub-set `ecl`
+
+- The range matching is done using regex on the form:
+```python
+min_range <= passport[key] <= max_range
+```
+- The string matching is done using regex
+```python
+re.match(regex, passport[key])
+```
+- The sub-set matching is done simply with
+```python
+passport[key] in some_defined_values
+```
+
+Each regex I used for `hgt`, `pid` and `hcl` is listed under:
+- `hgt` : `(^(1[5-8]\d|19[0-3])cm$|^(([5-6]\d|7[0-6])in)$)`
+- `pid` : `^\d{9}$`
+- `hcl` : `^#[\d|a-f]{6}$`
 
 ---
 
 
 
 ## --- Day 5: Passport Processing ---
+[Solution!](./05/solution.py)
 
 ### Part 1
 - Find the seat ID with the highest possible ID
@@ -196,6 +287,7 @@ return reduce(mul, [sum(grid[i * dy][(i * dx) % W] == "#" for i in range(H // dy
 
 
 ## --- Day 6: Custom Customs ---
+[Solution!](./06/solution.py)
 
 ### Part 1
 - Find the number of questions anyone answered "yes" to in each group, and get sum of all groups
