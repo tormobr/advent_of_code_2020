@@ -332,10 +332,132 @@ for i, ID in enumerate(all_IDs[:-1]):
 ## --- Day 6: Custom Customs ---
 [Solution!](./06/solution.py)
 
+### Input
+The input for this day is contains lines where each line is either a new-line of a string. The input consist of groups of people answering questions, and each group is separated by an empty newline.
+
+Example input:
+```
+abc
+
+a
+b
+c
+
+ab
+ac
+
+a
+a
+a
+a
+
+b
+```
+
+The first thing I did was to split all the grups. This is done with:
+```python
+groups = re.split(r"\n\n", text)
+```
+
+Inside every group there are people answering questions and these are seperated with a single newline. I therefor split each group into a list with the answers for every person. This is done with: 
+
+```python
+l = group.split("\n")
+```
+
+First I get the number of people with:
+
+```python
+people = len(l)
+```
+
+For each of the people we need to count their answers. This is done using `collections.Counter`. We then add the counts for each person to a global list together with the number of people in that group. This is done with a tuple.
+```python
+c = Counter(c for ans in l for c in ans)
+ret.append((c, reps))
+```
+
 ### Part 1
-- Find the number of questions anyone answered "yes" to in each group, and get sum of all groups
+After processing the input data, this task is really simple to solve. We just need to iterate through the list of groups and get the number of questions that someone answered yes to. This is done with:
+```python
+sum(len(c.keys()) for c,reps in counts)
+```
 
 ### Part 2
-- Get the number of questions everyone in the group answered yes to. And return sum of sums
+Part 2 asks for the number of questions where all people in a group answered yes. After creating the datastructures this can easially be extracted with:
+```python
+sum(sum(v == people for v in c.values()) for c,people in counts)
+```
 
 ---
+
+## --- Day 7: somehting ---
+
+### Input
+This day was the hardest one so far. A big reason for this was because of all the input parsing needed. The input is given as lines with strings. Each line describes what bags a certain bag can contain.
+
+Example input:
+```
+light red bags contain 1 bright white bag, 2 muted yellow bags.
+dark orange bags contain 3 bright white bags, 4 muted yellow bags.
+bright white bags contain 1 shiny gold bag.
+muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.
+shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.
+dark olive bags contain 3 faded blue bags, 4 dotted black bags.
+vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
+faded blue bags contain no other bags.
+dotted black bags contain no other bags.
+```
+
+This Input get be represented as a graph. And a good idea is to build that graph. I chose a dictionary representation of the graph.
+
+The first step to doing this is to modify the input lines a little bit using a regex. I replaced all `bags` with just `bag` to avoid getting any key errors. As well as this, I removed some spacing, and puntiation. This is done with:
+```python
+data = open("input.txt").read()
+subs = {", ": ",", "\.": "", "bags": "bag", r"(\d)\s": r"\1:"}
+for k, v in subs.items():
+    data = re.sub(k, v, data)
+```
+
+After this is done, I split the line into `key, values` pairs:
+```python
+data = [line.split(" contain ") for line in data.split("\n")][:-1]
+```
+
+When this is done we can start extracting the values. This is done by splitting the values on `,` and looping over them. For every iteration we use the bag name as a key, and the number as value in a sub dictionary. When all the values are extracted we add the sub dict to the main dict.
+```python
+v_list = values.split(",")
+sub_dict = {}
+for v in v_list:
+    num, tag = v.split(":")
+    sub_dict[tag] = int(num)
+D[key] = sub_dict
+```
+
+### Part 1
+After creating the representation of the graph this part was a pretty straight forward DFS/BFS. We simply start by initiating a queue with all the keys. For each iteration we pop the first element in the queue. If the target is in the elemts children we add 1 to the score. Otherwise we add all the children to the q.
+
+```python
+while q:
+    k, start_node = q.popleft()
+    if start_node in SEEN:
+        continue
+    if TARGET in D[k].keys():
+        total += 1 
+        SEEN.add(start_node)
+    for child in D[k]:
+        q.appendleft((child, start_node))
+```
+
+### Part 2
+This part is similar to part 1. Instead of starting with all the keys, we only initiate the que with `shiny gold bag` as key. The we search down throught the children. For every children we update a multiplier depending on how many bags a bag can contain.
+
+```python
+while q:
+    k, multiplier = q.popleft()
+    # Get the children and their values of current bag
+    for child_key, child_value in D[k].items():
+        new_mul = multiplier * child_value
+        total += new_mul
+        q.appendleft((child_key, new_mul))
+```
