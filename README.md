@@ -266,6 +266,8 @@ Each regex I used for `hgt`, `pid` and `hcl` is listed under:
 - `pid` : `^\d{9}$`
 - `hcl` : `^#[\d|a-f]{6}$`
 
+To sum up. For each of the passports I test these requirements, in addtion to the requirement from part 1, and if there are all met the passport is valid, and we increase the sum.
+
 ---
 
 
@@ -273,11 +275,52 @@ Each regex I used for `hgt`, `pid` and `hcl` is listed under:
 ## --- Day 5: Passport Processing ---
 [Solution!](./05/solution.py)
 
+### Input
+The input for this day required no parsing at all. I simply read the input file and store each line in a array. This is done with this code:
+
+```python
+seats = [f(l.strip()) for l in open(filename)]
+``` 
+
+Example input looks like this.
+```
+BFFFBBFRRR
+FFFBBBFRRR
+BBFFBBFRLL
+```
+
 ### Part 1
-- Find the seat ID with the highest possible ID
+First thing we need to do is to extract the seat ID from a string. We start looking at the row.
+We know that `F` means select the lower half of the interval, and `B` means select the higher half of the interval`. I quickly discovered that we can directly map the `F` and the `B` characters in the string to the bits in a byte. This means a `B` at position `0` in the string would result in setting bit 7 in a byte to 1. I applied this strategy and it worked perfectly.
+
+A row number can then be extracted with the following code:
+
+```python
+row = sum([int(c=="B") << 6-i for i, c in enumerate(s[:7])])
+```
+
+The process for the columns are exactly the same, except we are only dealing with 3 bits, instad of 8.
+```python
+col = sum([int(c=="R") << 2-i for i, c in enumerate(s[7:])])
+``
+
+After this is extracted we can simply calculate the ID with `row * 8 + col`
+
+We store this result in a list, and simply select the max of that list with
+```python
+result = max(all_IDs)
+```
 
 ### Part 2
-- Find "your" seat. The seat that is missing from the data. (not at the beginning or end)
+Part 2 was pretty straight forward at this point. We have all the id's stored in a list, and we know that there is a gap in that list that is supposed to be our ID. This means if the id's are `[3,4,5,7,8,9]`, we know that our id is 6.
+
+```python
+for i, ID in enumerate(all_IDs[:-1]):
+    if res[i] != res[i+1] - 1:
+        return ID + 1
+```
+
+**See how the plane fills up**
 ![alt](05/animations/viz.gif)
 
 
