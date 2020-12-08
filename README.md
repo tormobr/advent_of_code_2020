@@ -392,6 +392,7 @@ sum(sum(v == people for v in c.values()) for c,people in counts)
 ---
 
 ## --- Day 7: Handy Haversacks ---
+[Solution!](./07/solution.py)
 
 ### Input
 This day was the hardest one so far. A big reason for this was because of all the input parsing needed. The input is given as lines with strings. Each line describes what bags a certain bag can contain.
