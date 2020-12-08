@@ -45,11 +45,58 @@ combinations = itertools.combinations(numbers, 3)
 
 ### --- Day 2: Password Philosophy ---
 
+### Input 
+The second day input is a bit more complicated than the first one. The input for day `2` consist of mutiple lines, where each line contains a integer range, a character, and a string.
+F.eks.
+
+```
+1-3 a: abcde
+1-3 b: cdefg
+2-9 c: ccccccccc
+```
+
+The first this I did was to read the entire input as a string.
+```python
+s = open("input.txt").read()
+```
+
+After this I used a simple regex to modify each line in the input.
+```
+1-3 a: abcde -> 1 3 a abcde
+```
+This is done to make it easier to split each line and extract the information. Now I can simply use `splitp()` to end up with something like:
+```
+["1", "3", "a", "abcde"]
+```
+
 #### Part 1
-- Get number of valid passwords from list. Count of specific letter in password has to be in given range
+The sultion for this task is very simple. After the input parsing I have an array of arrays, where each sub-array is on the format: `[start, end, character, string]`.
+
+- Step 1: Iterate through the lines
+`for s,e,c,s in all_lines:`
+- Step 2: Get the count for `letter` in the string
+`if s.count(c): result += 1`
+- Step 3: Check if count is in the range `start-end`, if yes update result
+
+This can all be done in a single list comprehension:
+```python
+return sum([s.count(c) in range(int(s), int(e)+1) for s,e,c,s in all_lines])
+```
 
 #### Part 2
-- Get number of valid passwords that meet new criteria. Letter must be at specific index.
+In part 2 we are suppose to check if the character `c` appears on either index `s` or index `e` in the string `s`. The password is valid if the chracter appears on at least, and only one of the indexes. In other words this can be expressed as a `XOR` opperation.
+
+| s | e | valid |
+|:-:|:-:|:-----:|
+| 0 | 0 |   0   |
+| 1 | 0 |   1   |
+| 0 | 1 |   1   |
+| 1 | 1 |   0   |
+
+
+```python
+return sum([(p[int(s)-1]==c) ^ (p[int(e)-1]==c) for s,e,c,s in all_lines])
+```
 
 ---
 
