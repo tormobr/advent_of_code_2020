@@ -547,9 +547,13 @@ if self.index in seen:
     break
 ```
 
-Now that this is in place we need to actully implement the switching of the operations. The first thing I did was to create a `dict` contains the possible swaps: `swaps = {"nop": "jmp", "jmp": "nop"} # possible switches`. Even though its only 2 possible swaps here, it could be more. The next part was to find all the indexes of the current items:
+Now that this is in place we need to actully implement the switching of the operations. The first thing I did was to create a `dict` contains the possible swaps: 
 ```python
-for key, value in switches.items():
+swaps = {"nop": "jmp", "jmp": "nop"}
+```
+Even though its only 2 possible swaps here, it could be more. The next part was to find all the indexes of the current items:
+```python
+for key, value in swaps.items():
     replacements = [i for i, val in enumerate(self.input) if val[0] == key]
 ```
 
