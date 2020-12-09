@@ -462,3 +462,107 @@ while q:
         total += new_mul
         q.appendleft((child_key, new_mul))
 ```
+
+## --- Day 8: Handheld Halting ---
+
+
+### Input
+The input for this day contains multiple lines, where on each line there is a instruction. The instruction contains a operation, and a value. F.eks.
+```
+nop +0
+acc +1
+jmp +4
+acc +3
+jmp -3
+acc -99
+acc +1
+jmp -4
+acc +6
+```
+
+I simply read each line and stored the operation, and value as a sub-list inside a list. This is done with: 
+```python
+data = []
+with open(filename) as f:
+    for line in f:
+        op_code, val = line.split()
+        data.append([op_code, int(val)])
+```
+The results from this is a list that looks something like this: `[["nop", 0], ["acc", 1], ["jmp", 4]....]`
+
+
+### Part 1
+I chose to go for a class implementation this day. This is mainly because it looks like a kind of problem that can be built on top on the next days 
+
+The first thing I did was to create a function to handle each of the operations.
+```python
+    def op_acc(self, v):
+        self.acc += v
+
+    def op_jmp(self, v):
+        self.index += v - 1 # -1 due to index increare in main loop
+
+    def op_nop(self, v):
+        pass
+```
+
+I also created a dict which map the `op code` strings to each function.
+```python
+op_funcs = {
+    "acc": self.op_acc,
+    "jmp": self.op_jmp,
+    "nop": self.op_nop
+}
+```
+
+After this is done we can simply perform the correct action with `op_funcs[current_op_code](current_value)`
+
+The next part was to actually write the code to execute the instrctions from the input. I wrote a function for this as well, called `execute_op_codes`. The main parts of this function looks like this: 
+```python
+while True:
+    op_code, val = self.input[self.index]
+    self.op_funcs[op_code](val)
+    self.index += 1
+```
+We simply extract the current instruction and make a call to the correct function.
+
+For now this is a infinite loop that will never end (before a `IndexError` of course). For part 1 we should exit the loop when a instruction is executed for the second time. To achieve this we simply use a set which we add every instruction to. If a new instruction is already in the set, we exit.
+```python
+if self.index in seen:
+    break
+SEEN.add(self.index)
+```
+After this the results are be stored in the instance variable `self.acc`
+
+### Part 2
+For this part we want the program to reach the bottom of the instructions, and terminate normaly. The first thing I did was to add another check into the `while True` loop from part 1:
+
+```python
+if self.index >= self.num_op_codes - 1:
+    self.normal_term = true
+    break
+if self.index in seen:
+    self.normal_term = false
+    break
+```
+
+Now that this is in place we need to actully implement the switching of the operations. The first thing I did was to create a `dict` contains the possible swaps: `swaps = {"nop": "jmp", "jmp": "nop"} # possible switches`. Even though its only 2 possible swaps here, it could be more. The next part was to find all the indexes of the current items:
+```python
+for key, value in switches.items():
+    replacements = [i for i, val in enumerate(self.input) if val[0] == key]
+```
+
+Now we can loop over the replacement indexes, and replace one at a time.
+```python
+for r in replacements:
+    self.input[r][0] = value
+    self.execute_op_codes()
+    if self.normal_term:
+        return self.acc
+
+    # Swith back if it didn't work out
+    self.input[r][0] = key
+```
+the last line of code make sure that only a single operation is switches at a time. For every iteration we simply run the `execute_op_codes` function, and check whether the termination was normal.
+
+---
