@@ -8,7 +8,7 @@ from advent_lib import *
 def part_1():
     data = read_lines("input.txt", f=int)
     step = 25
-    for i in range(step+1, len(data)):
+    for i in range(step, len(data)):
         nums = data[i-step:i]
         target = data[i]
         if not any((x + y == target) for x, y in itertools.combinations(nums, 2)):

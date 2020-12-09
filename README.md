@@ -575,4 +575,250 @@ for r in replacements:
 ```
 the last line of code make sure that only a single operation is switches at a time. For every iteration we simply run the `execute_op_codes` function, and check whether the termination was normal.
 
+
 ---
+
+
+## --- Day 9: Encoding Error ---
+[Solution!](./09/solution.py)
+
+### Input 
+The input for this day consist of numbers seperated by a newline(`\n`). To read the input I used a very simple list comprehension to store the numbers in a list:
+```python
+data = [int(l.strip()) for l in open("input.txt")]
+```
+
+### Part 1
+To solve this part I created a loop to loop through all the numbers in the list. We can skip the first `25` numbers, because no check is need for these.
+```python
+step = 25
+for i in range(step, len(data)):
+```
+
+The next part is to extract the `25` numbers before the current number. This is done with array slicing.
+```python
+nums = data[i-step:i]
+```
+Now all that remains is to check whether `2` of the numbers in that list produce a sum that is equal to the current number. To achieve this I used `itertools.combinations`. This part of the task is exactly the same as day 1. `itertools.combinations` with `r` argument set to `2` will produce all possible combinations of length `2` from the numbers in `nums`. All that is left to do then is to check if the sum of any combination is equal to the target. If not we have the result.
+```python
+if not any((x + y == target) for x, y in itertools.combinations(nums, 2)):
+    return target
+```
+
+### Part 2
+Part 2 for this day is to find a contiguous set of numbers inside the array that adds up to the results from part 1.
+
+I solved this with 2 nested for-loops. The first for loop defines the start of the range, and the second defines the end of the range. For every new `j` we simply check if the sum of that range is equal to the target. If it is, we return the answer, if it is smaller we continue expanding the range, if it is bigger than the target we move the start index of the range up.
+```python
+for i in range(len(data)):
+    for j in range(i+1, len(data)):
+        current_range = data[i:j+1]
+        current_sum = sum(current_range)
+        # Return results if current sum match target
+        if current_sum == target:
+            return min(current_range) + max(current_range)
+
+        # if current sum is already over target, no need to continue
+        if current_sum > target:
+            break
+```
+
+
+
+---
+
+
+## --- Day 10: \<TITLE\> ---
+[Solution!](./10/solution.py)
+
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 11: \<TITLE\> ---
+[Solution!](./11/solution.py)
+
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 12: \<TITLE\> ---
+[Solution!](./12/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 13: \<TITLE\> ---
+[Solution!](./13/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 14: \<TITLE\> ---
+[Solution!](./14/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 15: \<TITLE\> ---
+[Solution!](./15/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 16: \<TITLE\> ---
+[Solution!](./16/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 17: \<TITLE\> ---
+[Solution!](./17/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 18: \<TITLE\> ---
+[Solution!](./18/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 19: \<TITLE\> ---
+[Solution!](./19/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 20: \<TITLE\> ---
+[Solution!](./20/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 21: \<TITLE\> ---
+[Solution!](./21/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 22: \<TITLE\> ---
+[Solution!](./22/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 23: \<TITLE\> ---
+[Solution!](./23/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 24: \<TITLE\> ---
+[Solution!](./24/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
+## --- Day 25: \<TITLE\> ---
+[Solution!](./25/solution.py)
+### Input 
+
+### Part 1
+
+### Part 2
+
+
+---
+
+
