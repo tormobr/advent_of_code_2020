@@ -19,19 +19,16 @@ def part_2():
     data = read_lines("input.txt", f=int)
     target = part_1()
     # i defines start of range
-    for i, n in enumerate(data):
-        current = n
-        # j+i defines end of range
+    for i in range(len(data)):
         for j in range(i+1, len(data)):
-            current += data[j]
-
+            current_range = data[i:j+1]
+            current_sum = sum(current_range)
             # Return results if current sum match target
-            if current == target:
-                result_range = data[i:j]
-                return min(result_range) + max(result_range)
+            if current_sum == target:
+                return min(current_range) + max(current_range)
 
             # if current sum is already over target, no need to continue
-            if current > target:
+            if current_sum > target:
                 break
 
 
