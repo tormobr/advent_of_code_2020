@@ -583,7 +583,32 @@ the last line of code make sure that only a single operation is switches at a ti
 [Solution!](./09/solution.py)
 
 ### Input 
-The input for this day consist of numbers seperated by a newline(`\n`). To read the input I used a very simple list comprehension to store the numbers in a list:
+The input for this day consist of numbers seperated by a newline(`\n`). 
+For example:
+```
+35
+20
+15
+25
+47
+40
+62
+55
+65
+95
+102
+117
+150
+182
+127
+219
+299
+277
+309
+576
+```
+
+To read the input I used a very simple list comprehension to store the numbers in a list:
 ```python
 data = [int(l.strip()) for l in open("input.txt")]
 ```
