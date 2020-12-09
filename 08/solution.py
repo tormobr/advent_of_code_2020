@@ -3,6 +3,7 @@ sys.path.insert(0,'..')
 from advent_lib import *
 
 class solver:
+
     def __init__(self):
         self.acc = 0
         self.index = 0
