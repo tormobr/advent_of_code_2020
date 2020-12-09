@@ -464,6 +464,7 @@ while q:
 ```
 
 ## --- Day 8: Handheld Halting ---
+[solution!](./08/solution.py)
 
 
 ### Input
