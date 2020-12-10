@@ -653,14 +653,114 @@ for i in range(len(data)):
 ---
 
 
-## --- Day 10: \<TITLE\> ---
+## --- Day 10: Adapter Array ---
 [Solution!](./10/solution.py)
 
 ### Input 
+This days input was a file with integers separated by newlines(`\n`). I simply read all the integers into a array with a list comprehension.
+
+```python
+data = [int(l.strip()) for l in open("input.txt")]
+```
+
+I then added `0` and the max built in adapter value to the array.
+```python
+data.append(0)
+data.append(max(data) + 3)
+```
+After this I sorted the array:
+
+```python
+sort = sorted(data)
+```
+After these steps the input array is ready.
 
 ### Part 1
+The first thing I did for this part was to create a dictionary to store all the different differences of jolts.
+```python
+diffs = defaultdict(int)
+```
+The next step was to loop over the sorted array. For each step we find the potential next adapters. These are the steps inside the loop.
+1. Find the next potential adapters from the sorted array
+2. Select the minimum of the potential adapters
+3. Update the diffrences dict
+
+```python
+for i, current_adapter in enumerate(sort[:-1]):
+    next_adapters = [n for n in sort[i+1:i+4] if n - current_adapter <= 3]
+    diffs[min(next_adapters) - current_adapter] += 1
+return diffs[1] * diffs[3]
+```
+Note that since we assume all the values in the array are distinct we only need to search 3 places ahead in the array. Any index over that would generate a difference larger than 3, which breaks the rules.
+
+The last step for this part is to simply return the product of `diffs[1]` and `diffs[3]`
 
 ### Part 2
+This part was maybe the hardest one yet. I tried brute forcing it, but realized soon that it would take way to long (I even fried my computer at a point, and had to reboot...). I then started on a more dynamic programming aproach, which worked out nicely.
+
+I created a recursive function that takes the current index as argument. The structure is actually very similar to the one in part 1, except we also explore the other potentail adapters(not just the minimum). It consist of the following steps:
+
+1. If index == len(data) -1: return 1
+2. If index has been visited before return previously found value
+3. Loop over potential next adapters, and call function recursivly
+3. Update value for current index
+
+Here is the function: 
+```python
+FOUND = {}
+def rec(i):
+    current = sort[i]
+    if i >= len(sort) -1:
+        return 1
+    # If path has been explored from this point and out
+    if i in FOUND.keys():
+        return FOUND[i]
+
+    # call function recursively and sum up the total and add to dict
+    tot = sum(rec(j+i+1) for j, x in enumerate(sort[i+1:i+4]) if x - current <= 3)
+    FOUND[i] = tot
+
+    return tot
+```
+
+The beauty about this implementation is that when it has explored the path from a current index, it doesn't have to do it again, instead simply do a lookup in a dictionary. If we take a look at the first example input; the execution would be like this:
+```
+Enter:  0
+Enter:  1
+Enter:  4
+Enter:  5
+Enter:  6
+Enter:  7
+Enter:  10
+Enter:  11
+Enter:  12
+Enter:  15
+Enter:  16
+Enter:  19
+Enter:  22
+BACKTRACK:  19
+BACKTRACK:  16
+BACKTRACK:  15
+BACKTRACK:  12
+BACKTRACK:  11
+Enter:  12
+FETCHING FROM DICT
+BACKTRACK:  10
+BACKTRACK:  7
+BACKTRACK:  6
+Enter:  7
+FETCHING FROM DICT
+BACKTRACK:  5
+Enter:  6
+FETCHING FROM DICT
+Enter:  7
+FETCHING FROM DICT
+BACKTRACK:  4
+BACKTRACK:  1
+BACKTRACK:  0
+
+```
+When the recursive function reaches a number it has seen before it doesn't continue deeper, but simply looks up the prevous value for that number. The total number of calls to the recursive function in this case is `17`. If we however remove the lookup test, its `58`. The results are still the same, it just takes forever when the input is large enough.
 
 
 ---

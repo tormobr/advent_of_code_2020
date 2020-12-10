@@ -9,6 +9,9 @@ def part_1():
     data = read_lines("input.txt", f=int)
     sort = sorted(data + [0, max(data) + 3])
 
+    # Asserting distinct
+    assert all(c == 1 for c in Counter(sort).values())
+
     diffs = defaultdict(int)
     for i, current_adapter in enumerate(sort[:-1]):
         next_adapters = [n for n in sort[i+1:i+4] if n - current_adapter <= 3]
