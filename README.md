@@ -827,7 +827,7 @@ for dx, dy in dirs:
 
     # Test if array indexes are out of bounds
     if not 0 <= new_x < W or not 0 <= new_y < H:
-        break
+        continue
     new_val = grid[new_y, new_x]
     if new_val == -1:   # -1 is #
         tot += 1
@@ -849,18 +849,52 @@ This concludes a iteration. The next step was to then integrate the support for 
 ```python
 while True:
     new_grid = grid.copy()
-    # Perform iteration here
+
+    # Perform single iteration here
 
     if np.array_equal(grid, new_grid):
         return np.count_nonzero(grid == -1), arrays
     grid = new_grid
 ```
 
-After all these steps I got the correct result, and also generated a animation showing how the seating arrangments changes (check [folder](./11/animations/part1.gif) for better quality):
+After all these steps I got the correct result, and also generated an animation showing how the seating arrangments changes (check [folder](./11/animations/part1.gif) for better quality):
 
 ![Part 1 anim](./11/animations/part1.gif)
 
 ### Part 2
+It was not too difficult to extend my implementation from part 1 to do this part. In the previous part we only checked the next neighbors, but in this part we will do some sort of *ray tracing* in a direction until we hit something. The main parts i changed look like this:
+
+```python
+for dx, dy in dirs:
+    for dist in range(1, max_dist+1):
+        new_x = x + dx*dist
+        new_y = y + dy*dist
+
+        # Test if array indexes are out of bounds
+        if not 0 <= new_x < W or not 0 <= new_y < H:
+            break
+        new_val = grid[new_y, new_x]
+        if new_val == -1:
+            tot += 1
+        if new_val != 0:
+            break
+```
+
+As you can see we added a new loop that increases the distances in a certain direction until it hits something (or is outside the grid). The calculation of the new `x` and `y` coordinates have now changed a little bit:
+
+```python
+new_x = x + dx
+new_y = y + dy
+
+#     |
+#     V 
+
+new_x = x + dx*dist
+new_y = y + dy*dist
+```
+
+As well as minor changes to the if tests, and updating the number of required occupied seats for change state. After tall these small tweaks to part 1, I got the correct result. Animation for this part as well of course: 
+
 ![Part 2 anim](./11/animations/part2.gif)
 
 
