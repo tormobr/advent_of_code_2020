@@ -22,14 +22,11 @@ def create_int_grid(grid):
 
 # Part 1 solution : 
 def part_1(grid, max_dist=100000):
-
-
     dirs = [(1,0),(0,1),(-1,0),(0,-1),(1,1),(-1,-1),(-1,1),(1,-1)]
     arrays = [] 
     while True:
         new_grid = grid.copy()
-        anim_arr = np.zeros(new_grid.shape)
-        arrays.append(new_grid.copy())
+        arrays.append(new_grid)
         for y, row in enumerate(grid):
             for x, elem in enumerate(row):
                 if grid[y, x] == 0:
