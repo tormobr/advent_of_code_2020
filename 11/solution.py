@@ -1,12 +1,5 @@
-from copy import deepcopy
 from numba import njit
-import math
-from collections import deque, defaultdict
-from functools import reduce
-from operator import mul
-import itertools
 import numpy as np
-import re
 
 import sys
 sys.path.insert(0,'..')
@@ -74,7 +67,7 @@ def part_1():
     grid = np.array(read_lines_sep("input.txt", sep="", f=str))
     grid = create_int_grid(grid)
     res, arrays = play(grid, max_dist=1)
-    animate(arrays, filename="part1.mp4", save=True, cmap=["darkred", "white", "darkgreen"], interval=200)
+    #animate(arrays, filename="part1.mp4", save=True, cmap=["darkred", "white", "darkgreen"], interval=200)
     return res
 
 # Part 2 solution : 
@@ -82,7 +75,7 @@ def part_2():
     grid = np.array(read_lines_sep("input.txt", sep="", f=str))
     grid = create_int_grid(grid)
     res, arrays = play(grid, max_dist=max(len(grid), len(grid[0])), num_occ=5)
-    animate(arrays, filename="part2.mp4", save=True, cmap=["darkred", "white", "darkgreen"], interval=200)
+    #animate(arrays, filename="part2.mp4", save=True, cmap=["darkred", "white", "darkgreen"], interval=200)
     return res
 
 
