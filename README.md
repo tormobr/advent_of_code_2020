@@ -766,7 +766,7 @@ When the recursive function reaches a number it has seen before it doesn't conti
 ---
 
 
-## --- Day 11: \<TITLE\> ---
+## --- Day 11: Seating System ---
 [Solution!](./11/solution.py)
 
 ### Input 
