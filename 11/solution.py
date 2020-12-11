@@ -1,4 +1,5 @@
 from copy import deepcopy
+from numba import njit
 import math
 from collections import deque, defaultdict
 from functools import reduce
@@ -11,55 +12,58 @@ import sys
 sys.path.insert(0,'..')
 from advent_lib import *
 
+def create_int_grid(grid):
+    int_grid = np.zeros(grid.shape)
+    mapping = {"#": -1, "L": 1, ".": 0}
+    for y, row in enumerate(grid):
+        for x, elem in enumerate(row):
+            int_grid[y, x] = mapping[elem]
+    return int_grid
+
 # Part 1 solution : 
-def part_1():
-    grid = read_lines_sep("input.txt", sep="", f=str)
+def part_1(grid, max_dist=100000):
 
 
-    dirs = [(1,0), (0,1), (1,1), (-1,0), (0, -1), (-1, -1), (-1, 1), (1, -1)]
-    its = 0
-     
+    dirs = [(1,0),(0,1),(-1,0),(0,-1),(1,1),(-1,-1),(-1,1),(1,-1)]
+    arrays = [] 
     while True:
-        its += 1
-        new_grid = deepcopy(grid)
+        new_grid = grid.copy()
+        anim_arr = np.zeros(new_grid.shape)
+        arrays.append(new_grid.copy())
         for y, row in enumerate(grid):
             for x, elem in enumerate(row):
-                if grid[y][x] == ".":
+                if grid[y, x] == 0:
                     continue
                 tot = 0
                 for dx, dy in dirs:
-                    for dist in range(1, max(len(grid), len(grid[0]))):
+                    for dist in range(1, max_dist):
                         new_x = x + dx*dist
                         new_y = y + dy*dist
                         if new_x < 0 or new_x > len(grid[0])-1:
                             break
                         if new_y < 0 or new_y > len(grid) -1:
                             break
-                        if grid[new_y][new_x] == "#":
+                        new_val = grid[new_y, new_x]
+                        if new_val == -1:
                             tot += 1
                             break
-                        elif grid[new_y][new_x] in ["L"]:
+                        elif new_val == 1:
                             break
-                if grid[y][x] == "L":
+                if grid[y, x] == 1:
                     if tot == 0:
-                        new_grid[y][x] = "#"
+                        new_grid[y, x] = -1
 
-                elif grid[y][x] == "#":
+                elif grid[y, x] == -1:
                     if tot >= 5:
-                        new_grid[y][x] = "L"
+                        new_grid[y, x] = 1
 
-        #for hax in new_grid:
-            #print("".join(hax))
-        #print("\n------\n")
-        #time.sleep(10)
+        # If no changes in the last step
+        if np.array_equal(grid, new_grid):
+            # delay last frame in animation
+            for _ in range(10):
+                arrays.append(grid)
 
-        if grid == new_grid:
-            ret = 0
-            for hax in grid:
-                for elem in hax:
-                    if elem == "#":
-                        ret += 1
-            return ret, its
+            return np.count_nonzero(grid == -1), arrays
         grid = new_grid
 
     return None
@@ -70,4 +74,8 @@ def part_2():
 
 
 if __name__ == "__main__":
-    pretty_print(part_1(), part_2())
+    grid = np.array(read_lines_sep("input.txt", sep="", f=str))
+    grid = create_int_grid(grid)
+    ret, arrays = part_1(grid)
+    animate(arrays, save=False, cmap=["darkred", "white", "darkgreen"], interval=300)
+    pretty_print(ret, part_2())

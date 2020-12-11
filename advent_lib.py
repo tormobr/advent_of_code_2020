@@ -88,7 +88,7 @@ def plot_matrix(m, cmap="plasma"):
 
 # Creates an animation from a set of matrices from the constructor
 # Used for grid layout that changes
-def animate(arrays, filename="ani.mp4", save=False, border_width=.1, fps=60, cmap=["darkgray", "white", "black"], aspect_ratio=1):
+def animate(arrays, filename="ani.mp4", save=False, border_width=.1, fps=60, cmap=["darkgray", "white", "black"], aspect_ratio=1, interval=10):
     #ax.figure(figsize=(20,10))
     cmap1 = colors.ListedColormap(cmap)
     arrays = arrays
@@ -100,7 +100,7 @@ def animate(arrays, filename="ani.mp4", save=False, border_width=.1, fps=60, cma
     for a in arrays:
         mat = ax.pcolormesh(a, edgecolor="lightgrey", cmap=cmap1, linewidth=border_width)
         plts.append([mat])
-    ani = animation.ArtistAnimation(fig, plts, blit=True, interval=10)
+    ani = animation.ArtistAnimation(fig, plts, blit=True, interval=interval)
     plt.gca().invert_yaxis()
     ax.axis("off")
     plt.show()
