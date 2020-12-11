@@ -770,8 +770,94 @@ When the recursive function reaches a number it has seen before it doesn't conti
 [Solution!](./11/solution.py)
 
 ### Input 
+This day's input consist of multiple lines, where each line contains chracters that are one of: `#`, `L` or `.`. All the lines make up a grid.
+
+For example:
+```
+L.LL.LL.LL
+LLLLLLL.LL
+L.L.L..L..
+LLLL.LL.LL
+L.LL.LL.LL
+L.LLLLL.LL
+..L.L.....
+LLLLLLLLLL
+L.LLLLLL.L
+L.LLLLL.LL
+```
+
+I read all the lines and characters into a 2D array (a matrix/grid). This was done using a list comprehension:
+```python
+[[c for c in s.strip()] for s in open("input.txt")]
+```
+
+After this for I mapped the different characters to integers in the grid. This is done for animation purposes later. From now on keep in mind this mapping:
+```python
+{"#": -1, "L": 1, ".": 0}
+```
+
 
 ### Part 1
+I quickly realized this task was very similar to the popular **game of life**. The rules were only a bit different. In addition to this we deal with empty spaces (`.`). My first step to solving this task was to manage to do one single iteration on the grid. A iterations contains these simple steps:
+1. Loop over every element in the grid
+2. Find all neighbors
+3. Count number of occupied seats among neighbors
+4. Change current element based on count
+
+Another thing to keep in mind is that we have to make a copy of the current board, and make changes to the copy during the iteration. This is because we don't want previous updates within the same iteration to affect the next updates.
+
+#### Looping over the grid
+```python
+for y, row in enumerate(grid):
+    for x, elem in enumerate(row):
+        # Calculate new state of element
+```
+
+#### Find the neighbors and count them
+The first thing I did here was to define all the possible directions we can move from the current cell.
+```python
+dirs = [(1,0),(0,1),(-1,0),(0,-1),(1,1),(-1,-1),(-1,1),(1,-1)]
+```
+The next thing is to loop over all these and count the occupied ones:
+```python
+tot = 0
+for dx, dy in dirs:
+    new_x = x + dx
+    new_y = y + dy
+
+    # Test if array indexes are out of bounds
+    if not 0 <= new_x < W or not 0 <= new_y < H:
+        break
+    new_val = grid[new_y, new_x]
+    if new_val == -1:   # -1 is #
+        tot += 1
+```
+
+#### Update current element
+After the previous step we have the number of occupied neighbors, and can now update according to the rules (remember the mapping from characters to ints I made):
+```python
+# Set the new values with regards to the rules of seatchanging
+if grid[y, x] == 1 and tot == 0:
+    new_grid[y, x] = -1
+
+elif grid[y, x] == -1 and tot >= num_occ:
+    new_grid[y, x] = 1
+```
+
+This concludes a iteration. The next step was to then integrate the support for multiple iterations. I simply wrapped all the previous code inside a `while True` and added a check thats checks if no change during the iteration happend:
+
+```python
+while True:
+    new_grid = grid.copy()
+    # Perform iteration here
+
+    if np.array_equal(grid, new_grid):
+        return np.count_nonzero(grid == -1), arrays
+    grid = new_grid
+```
+
+After all these steps I got the correct result, and also generated a animation showing how the seating arrangments changes (check [folder](./11/animations/part1.gif) for better quality):
+
 ![Part 1 anim](./11/animations/part1.gif)
 
 ### Part 2
