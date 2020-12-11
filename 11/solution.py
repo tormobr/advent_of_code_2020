@@ -12,6 +12,8 @@ import sys
 sys.path.insert(0,'..')
 from advent_lib import *
 
+# Changes input grid to integers instead of strings
+# Done for making the animations
 def create_int_grid(grid):
     int_grid = np.zeros(grid.shape)
     mapping = {"#": -1, "L": 1, ".": 0}
@@ -30,9 +32,11 @@ def play(grid, max_dist=1, num_occ=4):
         arrays.append(new_grid)
         for y, row in enumerate(grid):
             for x, elem in enumerate(row):
+                # If current seat is not a seat, continue
                 if grid[y, x] == 0:
                     continue
-                tot = 0
+
+                tot = 0     # The total number of neighbors that are occupied
                 for dx, dy in dirs:
                     for dist in range(1, max_dist+1):
                         new_x = x + dx*dist
@@ -46,6 +50,8 @@ def play(grid, max_dist=1, num_occ=4):
                             tot += 1
                         if new_val != 0:
                             break
+
+                # Set the new values with regards to the rules of seatchanging
                 if grid[y, x] == 1 and tot == 0:
                     new_grid[y, x] = -1
 
@@ -59,16 +65,16 @@ def play(grid, max_dist=1, num_occ=4):
                 arrays.append(grid)
 
             return np.count_nonzero(grid == -1), arrays
-        grid = new_grid
 
-    return None
+        # Apply new changes to grid
+        grid = new_grid
 
 # Part 2 solution : 
 def part_1():
     grid = np.array(read_lines_sep("input.txt", sep="", f=str))
     grid = create_int_grid(grid)
     res, arrays = play(grid, max_dist=1)
-    animate(arrays, save=False, cmap=["darkred", "white", "darkgreen"], interval=200)
+    animate(arrays, filename="part1.mp4", save=True, cmap=["darkred", "white", "darkgreen"], interval=200)
     return res
 
 # Part 2 solution : 
@@ -76,7 +82,7 @@ def part_2():
     grid = np.array(read_lines_sep("input.txt", sep="", f=str))
     grid = create_int_grid(grid)
     res, arrays = play(grid, max_dist=max(len(grid), len(grid[0])), num_occ=5)
-    animate(arrays, save=False, cmap=["darkred", "white", "darkgreen"], interval=200)
+    animate(arrays, filename="part2.mp4", save=True, cmap=["darkred", "white", "darkgreen"], interval=200)
     return res
 
 
