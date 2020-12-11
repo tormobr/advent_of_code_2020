@@ -772,8 +772,11 @@ When the recursive function reaches a number it has seen before it doesn't conti
 ### Input 
 
 ### Part 1
+![Part 1 anim](./11/animations/part1.gif)
 
 ### Part 2
+![Part 2 anim](./11/animations/part2.gif)
+
 
 
 ---
