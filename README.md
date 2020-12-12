@@ -902,13 +902,148 @@ As well as minor changes to the if tests, and updating the number of required oc
 ---
 
 
-## --- Day 12: \<TITLE\> ---
+## --- Day 12: Rain Risk ---
 [Solution!](./12/solution.py)
+
 ### Input 
+The input for today was multiple lines, where each line contains a command, and a number (e.g. `F10`). In this case the command is `F` and the number is 10. 
+Example Input:
+```
+F10
+N3
+F7
+R90
+F11
+```
+
+I created a array containing tuples with the command and number. This was done with this list comprehension:
+```python
+[(line[0], int(line[1:])) for line in open("input.txt")]
+```
 
 ### Part 1
+Given the different rules that tells us which direction we should move in I created a dict for this:
+```python
+DIRECTIONS = {
+    "E": (0, 1),
+    "W": (0, -1),
+    "S": (1, 0),
+    "N": (-1, 0)
+}
+```
+This way we can simply pass in a key, and it spits out the correct x and y direction for that command. 
+
+Since it is also possible to turn left and right I created a array with all possible directions in order of turning.
+```python
+SPIN_DIRS = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+```
+If you move forward in the array it represents turning right, and moving backwards represents turning left. This means we can calculate the new direction after a turn by simply keeping track of the current direction, and its index. If a right turn apears, simply jump to the next element in the array, and for left turns jump to the previous direction in the array.
+
+Before starting to execute the commands I created a couple of variables. The `x` and `y` for the ship, and the index for the direction the ship is facing:
+```python
+pos_x, pos_y = 0, 0
+face_index = 0
+```
+
+You can see the `face_index` starts at 0, because the ship starts facing east. 
+
+Now we are ready to start executing the commands. For each new command there are basically 4 different outcomes. 
+1. The ship moves specified direction
+2. Ship turns right
+3. Ship turns left
+4. Ship moves the way it is facing
+
+The structure of the loop looks something like this:
+
+```python
+for command, num in data:
+    if command == "F":
+        # Move ship in facing direction
+
+    elif command == "R":
+        # change facing direction to the right
+
+    elif command == "L":
+        # change facing direction to the left
+
+    else:
+        # Move ship in specified direction (E, W, N, S)
+```
+
+#### Moving the ship in facing direction
+The current direction the ship is facing is stored in the `SPIN_DIRS` at index `face_index`. This means we can extract the direction like this:
+```python
+dir_y, dir_x = SPIN_DIRS[face_index % 4]
+```
+The next step is then to simply update the position of the ship. We simply use the new direction, and move `num` number of times.
+```python
+pos_x += num * dir_x
+pos_y += num * dir_y
+```
+
+#### Rotating the ship
+As mentioned the current direction is stored at index `face_dir` in `SPIN_DIRS`. To move right we simply increase `face_dir` and to move left we decrease it. We add a `% 4` operation to make sure it is circular.
+```python
+face_index += num // 90     # RIGHT 
+face_index -= num // 90     # LEFT
+```
+
+#### Moving ship in specified direction
+Instead of moving the ship in the direction it is facing we should move the ship in a specific direction. The differect directions are specified in the `DIRECTIONS` dict, and we can therefor simply extract the direction with:
+```python
+dir_y, dir_x = DIRECTIONS[command]
+```
+
+Updating the position is exactly the same as previously:
+```python
+pos_x += num*dir_x
+pos_y += num*dir_y
+```
+
+#### Extracting the result
+Final part is to get the manhatten distance from starting position (0, 0) to where the ship end up. This is simply done with:
+```python
+abs(pos_x) + abs(pos_y)
+```
 
 ### Part 2
+Part 2 was very similar to part 1. There are only a few changes in the rules. Instead of the ship moving when the command is `N`, `S`, `E` or `W`, we should move a way point instead. `R` and `L` also means to rotate the waypoint around the ship now. The rules for moving forward are also a little bit changed.
+
+To acheive this we have to keep track of the waypoint `x` and `y`
+```python
+way_x, way_y = 10, -1
+```
+
+#### moving the waypoint
+Moving the waypoint in this part is exactly the same as moving the ship in the last part:
+```python
+dir_y, dir_x  = DIRECTIONS[command]
+way_x += num*dir_x
+way_y += num*dir_y
+```
+
+#### Moving the ship forward
+The new rules actually makes it easier to move the ship forward `F` :
+```python
+pos_x += num*way_x
+pos_y += num*way_y
+```
+
+#### Rotating the waypoint
+This was the part that took the most time for me to figure out. I ended up with a solution where i rotate the waypoint 90 degrees at a time, and update the position for every iteration. The implementation looks like this: 
+```python
+rotations = num // 90
+for _ in range(rotations):
+    # Clockwise
+    way_x, way_y = -way_y, way_x
+
+    # Anti clockwise
+    way_x, way_y = way_y, -way_x
+```
+
+#### Extracting the results
+This part was the same as in the previous part. Simply get the manhatten distance
+
 
 
 ---
