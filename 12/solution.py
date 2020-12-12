@@ -19,44 +19,29 @@ DIRECTIONS = {
 }
 
 SPIN_DIRS = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
 # Part 1 solution : 
 def part_1():
-    data = read_lines("input.txt", f=str)
-    hax = []
-    for line in data:
-        command = line[0]
-        num = int(line[1:])
-        hax.append((command, num))
-    print_arr(hax)
-    
+    data = [(line[0], int(line[1:])) for line in open("input.txt")]
 
-    pos_x = 0
-    pos_y = 0
+    pos_x, pos_y = 0, 0
     face_index = 0
-    new_dir = (0, 1)
-    for com, num in hax:
-        if com == "F":
+    for command, num in data:
+        if command == "F":
+            dir_y, dir_x = SPIN_DIRS[face_index % 4]
+            pos_x += num*dir_x
+            pos_y += num*dir_y
             
-            new_dir = SPIN_DIRS[face_index % 4]
-            
-            current_y, current_x = new_dir
-            pos_x += num*current_x
-            pos_y += num*current_y
-            #print("moving: ", new_dir, num, "current: ", pos_y, pos_x)
-            continue
-        elif com == "R":
+        elif command == "R":
             face_index += num // 90
-            continue
-        elif com == "L":
-            face_index -= num // 90
-            continue
 
-        new_dir = DIRECTIONS[com]
-        
-        current_y, current_x = new_dir
-        pos_x += num*current_x
-        pos_y += num*current_y
-        #print("com: ", com, new_dir, num, "current: ", pos_x, pos_y)
+        elif command == "L":
+            face_index -= num // 90
+
+        else:
+            dir_y, dir_x = DIRECTIONS[command]
+            pos_x += num*dir_x
+            pos_y += num*dir_y
 
     return abs(pos_x) + abs(pos_y)
 
@@ -66,51 +51,31 @@ def part_1():
 
 # Part 2 solution : 
 def part_2():
-    data = read_lines("input.txt", f=str)
-    hax = []
-    for line in data:
-        command = line[0]
-        num = int(line[1:])
-        hax.append((command, num))
-    print_arr(hax)
-    
+    data = [(line[0], int(line[1:])) for line in open("input.txt")]
 
-    pos_x = 0
-    pos_y = 0
-    way_x = 10
-    way_y = -1
-    face_index = 0
-    new_dir = (0, 1)
-    for com, num in hax:
-        if com == "F":
+    pos_x, pos_y = 0, 0
+    way_x, way_y = 10, -1
+    for command, num in data:
+        if command == "F":
             pos_x += num*way_x
             pos_y += num*way_y
-            print("moving ship: ", num, "current: ", pos_x, pos_y)
-            continue
-        elif com == "R":
-            spin = num // 90
-            for i in range(spin):
-                way_x, way_y = -way_y, way_x
-                print("rorated waypoint: ", way_x, way_y)
-            continue
-        # SPIN_DIRS = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-        # R90: (-4, 10) => (10, 4)
-        elif com == "L":
-            spin = num // 90
-            for i in range(spin):
-                way_x, way_y = way_y, -way_x
-                print("rorated waypoint: ", way_x, way_y)
-            continue
 
-        new_dir = DIRECTIONS[com]
-        
-        dir_y, dir_x = new_dir
-        way_x += num*dir_x
-        way_y += num*dir_y
-        print("movin waypoint: ", way_x, way_y)
+        elif command == "R":
+            rotations = num // 90
+            for _ in range(rotations):
+                way_x, way_y = -way_y, way_x
+
+        elif command == "L":
+            rotations = num // 90
+            for _ in range(rotations):
+                way_x, way_y = way_y, -way_x
+        else:
+            dir_y, dir_x  = DIRECTIONS[command]
+            way_x += num*dir_x
+            way_y += num*dir_y
 
     return abs(pos_x) + abs(pos_y)
 
 
 if __name__ == "__main__":
-    pretty_print(part_1(), None)
+    pretty_print(part_1(), part_2())
