@@ -62,7 +62,7 @@ def play(grid, max_dist=1, num_occ=4):
         # Apply new changes to grid
         grid = new_grid
 
-# Part 2 solution : 
+# Part 1 solution : 
 def part_1():
     grid = np.array(read_lines_sep("input.txt", sep="", f=str))
     grid = create_int_grid(grid)
