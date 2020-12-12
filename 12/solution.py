@@ -113,4 +113,4 @@ def part_2():
 
 
 if __name__ == "__main__":
-    pretty_print(part_1(), part_2())
+    pretty_print(part_1(), None)
