@@ -59,7 +59,7 @@ def read_lines_sep(filename, sep=None, f=str, use_file=True):
 
 # Finds all the integers in string
 def ints(s):
-    return re.findall(r"-?\d+", s)
+    return [int(x) for x in re.findall(r"-?\d+", s)]
 
 # Prints array items
 def print_arr(arr):
