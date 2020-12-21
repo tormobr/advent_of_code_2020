@@ -67,8 +67,8 @@ def stitch_grids(grid_list):
     hor = np.array([np.hstack([g for g in grids[i]]) for i in range(len(grids))])
     return np.vstack(hor)
 
-# Part 1 solution : 
-def part_1():
+# Constructs the image from tiles
+def create_image():
     D = {}
     for tile in open("input.txt").read().split("\n\n"):
         lines = tile.strip().split("\n")
@@ -85,31 +85,35 @@ def part_1():
     for ID, grid in D.items():
         possible.extend(flip_rot(grid, ID))
 
+    # Some vars
     SEEN = set()
-    combs = []
-    grid_combs = []
+    res_ids = []
+    res_tiles = []
+
+    # reset certain values on backtrack
+    def back_track(x, y, ID):
+        SEEN.remove(ID)
+        fill[y][x] = []
+        fill_ID[y][x] = None
+
     def rec(current, ID, x, y):
-        if ID in SEEN or combs:
+        if ID in SEEN or res_ids:
             return
 
         SEEN.add(ID)
         fill[y][x] = deepcopy(current)
         fill_ID[y][x] = ID
-
         if x == len(fill) -1 and y == len(fill)-1:
-            combs.append(deepcopy(fill_ID))
-            grid_combs.append(deepcopy(fill))
-            print("appending to res")
+            res_ids.append(fill_ID.copy())
+            res_tiles.append(fill.copy())
             return 
 
         if not check_match(x, y, fill):
-            SEEN.remove(ID)
-            fill[y][x] = []
-            fill_ID[y][x] = None
+            back_track(x, y, ID)
             return
 
         for new_ID, n in possible:
-            if combs:
+            if res_ids:
                 return 
 
             if x == len(fill)-1:
@@ -120,49 +124,35 @@ def part_1():
                 new_y =  y
 
             ret = rec(n, new_ID,  new_x, new_y)
+        back_track(x, y, ID)
 
-        SEEN.remove(ID)
-        fill[y][x] = []
-        fill_ID[y][x] = None
    
 
         
     # Call recursive functions starting at every possible tile variant
     for i, (ID, p) in enumerate(possible):
         SEEN = set([])
-        print("calling dr love", i)
         ret = rec(p, ID, 0, 0)
 
-    
-    main_grid = stitch_grids(grid_combs[0])
-    grid_combs = flip_rot(main_grid)
-    #for g in grid_combs:
-        #for l in g:
-            #print("".join(l))
-        #print("\n")
-    #return
-    for grid in grid_combs:
-        #vert = stitch_grids(grids)
+    return res_tiles[0], res_ids[0]
+
+def part_1():
+    _, ids = create_image()
+    for c in ids:
+        print(c)
+    return reduce(mul, [ids[0][0], ids[0][-1], ids[-1][0], ids[-1][-1]])
+
+def part_2():
+    tiles, _ = create_image()
+    main_grid = stitch_grids(tiles)
+    orients  = flip_rot(main_grid)
+    for grid in orients:
         count = count_monsters(grid)
-        print("monster count: ", count)
-        for row in grid:
-            print("".join(row))
-        print("\n")
-        
+
         # "#" in monster = 15
         if count > 0:
-            print("this happens")
             res = np.count_nonzero(grid == "#")
             return res - (count * 15 )
-        
-        #print(vert)
-    #print(combined)
-
-
-    
-
-
-    return None
 
 def count_monsters(grid):
     m1 = "                  # "
@@ -191,50 +181,9 @@ def count_monsters(grid):
                         found = False
                         break
             if found:
-                print("found monster")
                 c += 1
 
     return c
-
-    """
-    def edges(grid):
-        top = grid[0]
-        bottom = grid[-1]
-        right = grid[:,-1]
-        left = grid[:,0]
-        return top, bottom, right, left
-
-    edge_values = defaultdict(int)
-    edge_names = defaultdict(list)
-    id_edges = defaultdict(list)
-    
-    for ID,grid in D.items():
-        #top, bottom, right, left = edges(grid)
-        grid_edges = edges(grid)
-        for e in grid_edges:
-            e = tuple(min(list(e), list(e[::-1])))
-            #e = tuple(e)
-            edge_values[e] += 1
-            edge_names[e].append(ID)
-            id_edges[ID].append(e)
-    
-    res = 1
-    for ID, edges in id_edges.items():
-        hax = 0
-        for e in edges:
-            v = edge_values[e]
-            if v == 1:
-                hax += 1
-        if hax == 2:
-            print("this never happens")
-            res *= ID
-            print(ID)
-    return  res
-    """
-# Part 2 solution : 
-def part_2():
-    return None
-
 
 if __name__ == "__main__":
     pretty_print(part_1(), part_2())
