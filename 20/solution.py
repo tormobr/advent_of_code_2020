@@ -13,6 +13,7 @@ from advent_lib import *
 
 sys.setrecursionlimit(100000)
 
+# Generates possible flips and rotations of tile
 def flip_rot(grid, ID=None):
     ret = []
     for _ in range(4):
@@ -30,14 +31,16 @@ def flip_rot(grid, ID=None):
             ret.append(deepcopy(grid))
     return ret
 
+# Removes the borders of tile
 def strip_grid(grid):
     return grid[1:-1, 1:-1]
 
+# Check if current layout is valid
 def check_match(x, y, fill):
     dirs = [(0, 1), (1, 0), (0, -1), (-1, 0)]
     curr = fill[y][x]
     grids = [[] for _ in range(4)]
-    for i, (dx, dy) in enumerate(dirs):
+    for i, (dy, dx) in enumerate(dirs):
         new_x = dx + x
         new_y = dy + y
         if new_x < 0 or new_x > len(fill)-1:
@@ -58,11 +61,11 @@ def check_match(x, y, fill):
         return False
     return True
 
+# Stitches all tiles together to big picture
 def stitch_grids(grid_list):
     grids = [[strip_grid(g) for g in row] for row in grid_list]
-    hor = np.array([np.vstack([g for g in grids[i]]) for i in range(len(grids))])
-    vert = np.hstack(hor)
-    return vert
+    hor = np.array([np.hstack([g for g in grids[i]]) for i in range(len(grids))])
+    return np.vstack(hor)
 
 # Part 1 solution : 
 def part_1():
@@ -86,52 +89,42 @@ def part_1():
     combs = []
     grid_combs = []
     def rec(current, ID, x, y):
-        if combs:
-            return True
-        if ID in SEEN:
-            return False
+        if ID in SEEN or combs:
+            return
+
         SEEN.add(ID)
         fill[y][x] = deepcopy(current)
         fill_ID[y][x] = ID
-        #print("new rec!", x, y, fill_ID)
-        #time.sleep(.9)
+
         if x == len(fill) -1 and y == len(fill)-1:
             combs.append(deepcopy(fill_ID))
             grid_combs.append(deepcopy(fill))
             print("appending to res")
-            time.sleep(1)
-            fill[y][x] = []
-            fill_ID[y][x] = None
-            return True
+            return 
 
         if not check_match(x, y, fill):
             SEEN.remove(ID)
             fill[y][x] = []
             fill_ID[y][x] = None
-            return False
+            return
 
-        hax = False
         for new_ID, n in possible:
             if combs:
-                return True
-            if new_ID in SEEN:
-                continue
+                return 
+
             if x == len(fill)-1:
                 new_x = 0
                 new_y = y+1
             else:
                 new_x = x+1
                 new_y =  y
-            ret = rec(n, new_ID,  new_x, new_y)
-            if ret:
-                hax = True
 
-        if ID in SEEN:
-            SEEN.remove(ID)
+            ret = rec(n, new_ID,  new_x, new_y)
+
+        SEEN.remove(ID)
         fill[y][x] = []
         fill_ID[y][x] = None
-        return hax
-    
+   
 
         
     # Call recursive functions starting at every possible tile variant
