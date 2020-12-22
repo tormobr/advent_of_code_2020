@@ -19,6 +19,7 @@ def solve(p2=False):
     data = read_lines("input.txt", f=str)
     strings = read_lines("text.txt", f=str)
 
+    # Builds the dict with data
     d = defaultdict(list)
     for line in data:
         n, rules = line.split(":")
@@ -41,6 +42,7 @@ def solve(p2=False):
             for j in range(1, 40):
                 d[0].append(([8]*i) + ([11]*j))
 
+    # Recursive function to test every string
     def rec(index, s, rule, depth):
         if index == len(s):
             return False, 0
