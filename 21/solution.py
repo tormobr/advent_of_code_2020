@@ -11,85 +11,69 @@ import sys
 sys.path.insert(0,'..')
 from advent_lib import *
 
+# Removes all alergens that possibly cant be the source
+def remove_non_alerg(D, food_items):
+    new_food_items = set()
+    DD = defaultdict(list)
+
+    for f in food_items:
+        for a, foods in D.items():
+            if all(f in x for x in foods):
+                DD[a].append(f)
+                new_food_items.add(f)
+
+    return new_food_items, DD
+
 # Part 1 solution : 
-def part_1():
+def extract_data():
     data = read_lines("input.txt", f=str)
     all_foods = []
-    food_set = set()
-    all_alerg = set()
     D = defaultdict(list)
-    DD = defaultdict(set)
-    nums = defaultdict(int)
-    FOODS = []
 
+    # Reading the data into dict
     for line in data:
         food, alerg = line.split("(")
         food_list = food.split()
         all_foods.extend(food_list)
-        food_set |= set(food_list)
 
         alerg = re.sub(r"(contains |\))", "", alerg)
-        alerg = re.sub(",", "", alerg)
-        alerg_list = alerg.split()
-        all_alerg  |= set(alerg_list)
+        alerg_list = [a.strip() for a in alerg.split(",")]
+
         for a in alerg_list:
-            nums[a] += 1
+            D[a].append(food_list)
+    for i in D.items():
+        print(i)
 
-        for f in food_list:
-            for a in alerg_list:
-                D[a].append(f)
-                DD[a].add(f)
-        for a in alerg_list:
-            FOODS.append((a, food_list))
+    return set(all_foods), D, all_foods
 
-    ret = 0
-    non_alerg = []
-    for f in all_foods:
-        for a, foods in D.items():
-            c = Counter(foods)
-            if c[f] >= nums[a]:
-                break
-        else:
-            #print("adding:", f)
-            non_alerg.append(f)
-            ret += 1 
-    for n in non_alerg:
-        for i, (a, f) in enumerate(FOODS):
-            if n in f:
-                FOODS[i][1].remove(n)
-                if n in food_set:
-                    food_set.remove(n)
+# Solution to part 1
+def part_1():
+    food_set, D, all_foods = extract_data()
+    SF, SD = remove_non_alerg(D, food_set)
 
+    # Count the number of ingridients that are not valid
+    return sum(f not in SF for f in all_foods)
 
-    ALL_FOODS = defaultdict(list)
-    for a, v in FOODS:
-        ALL_FOODS[a].append(v)
+# Solves part 2
+def part_2():
+    food_set, D, all_foods = extract_data()
+    food_set, D = remove_non_alerg(D, food_set)
 
-            
-    # Solves part 2
-    res = {}
     q = deque([{}])
     while q:
         path = q.popleft() 
-        print(path)
-        for a, values in ALL_FOODS.items():
+        for a, values in D.items():
             if a in [a for a, v in path.items()]:
                 continue
-            for curr in food_set:
-                if curr in [v for a, v in path.items()]:
+            for v in values:
+                if v in [v for a, v in path.items()]:
                     continue
-                if all(curr in rec for rec in values):
-                    new_path = deepcopy(path)
-                    new_path[a] = curr
-                    if len(new_path) == len(food_set):
-                        res = new_path
-                        return ret, ",".join(v for x, v in sorted(res.items(), key=lambda x: x[0]))
-                    q.appendleft(new_path)
+                new_path = deepcopy(path)
+                new_path[a] = v
+                if len(new_path) == len(food_set):
+                    return ",".join(v for x, v in sorted(new_path.items(), key=lambda x: x[0]))
 
-
-# Part 2 solution : 
-def part_2():
-    return None
+                q.appendleft(new_path)
 
 
 if __name__ == "__main__":
