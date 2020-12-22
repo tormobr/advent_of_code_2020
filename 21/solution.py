@@ -1,3 +1,4 @@
+from copy import deepcopy
 import math
 from collections import deque, defaultdict, Counter
 from functools import reduce
@@ -65,24 +66,26 @@ def part_1():
         ALL_FOODS[a].append(v)
 
             
-    print(food_set) 
-    found = set()
+    # Solves part 2
     res = {}
-    hax = []
-    strudel = [(x, y) for x, y in sorted(ALL_FOODS.items(), key=lambda x: len(x[1]), reverse=True)]
-    for a, values in strudel:
-        print(a, values)
-        for curr in food_set:
-            #print("testing curr:", curr)
-            if all(curr in rec for rec in values) and curr not in found:
-                found.add(curr)
-                hax.append((a, curr))
-                res[a] = curr
-    #print(res)
-    assert len(found) == len(food_set)
-    print(all_alerg - set(a for a, v in res.items()))
-    #res = ",".join(v for x, v in sorted(res.items(), key=lambda x: x[0]))
-    return ret, res, food_set
+    q = deque([{}])
+    while q:
+        path = q.popleft() 
+        print(path)
+        for a, values in ALL_FOODS.items():
+            if a in [a for a, v in path.items()]:
+                continue
+            for curr in food_set:
+                if curr in [v for a, v in path.items()]:
+                    continue
+                if all(curr in rec for rec in values):
+                    new_path = deepcopy(path)
+                    new_path[a] = curr
+                    if len(new_path) == len(food_set):
+                        res = new_path
+                        return ret, ",".join(v for x, v in sorted(res.items(), key=lambda x: x[0]))
+                    q.appendleft(new_path)
+
 
 # Part 2 solution : 
 def part_2():
