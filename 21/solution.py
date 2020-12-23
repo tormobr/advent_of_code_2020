@@ -1,10 +1,6 @@
 from copy import deepcopy
 import math
-from collections import deque, defaultdict, Counter
-from functools import reduce
-from operator import mul
-import itertools
-import numpy as np
+from collections import deque, defaultdict
 import re
 
 import sys
@@ -41,8 +37,6 @@ def extract_data():
 
         for a in alerg_list:
             D[a].append(food_list)
-    for i in D.items():
-        print(i)
 
     return set(all_foods), D, all_foods
 

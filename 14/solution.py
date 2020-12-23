@@ -1,26 +1,16 @@
-import math
-from collections import deque, defaultdict
-from functools import reduce
-from operator import mul
 import itertools
-import numpy as np
-import re
 
 import sys
 sys.path.insert(0,'..')
 from advent_lib import *
 
-# Part 1 solution : 
 
+# Applies the mask to a value for part 1
 def apply_mask(s, MASK):
-    res = ""
-    for a, b in zip(s, MASK):
-        if b == "X":
-            res += a
-        else:
-            res += b
-    return int(res, 2)
+    res = [a if b == "X" else b for a, b in zip(s, MASK)]
+    return int("".join(res), 2)
 
+# Part 1 solution : 
 def part_1():
     addr = {}
     s = open("input.txt").read().strip()
@@ -36,11 +26,11 @@ def part_1():
             bitstring = "{0:036b}".format(value)
             masked_value = apply_mask(bitstring, MASK)
             MEM[addr] = masked_value
-    res = 0
-    for k, v in MEM.items():
-        res += v
-    return res
 
+    return sum(v for v in MEM.values())
+    
+
+# Applies the mask for part 2 solution
 def apply_mask_2(s, MASK):
     res = ""
     perms = 0

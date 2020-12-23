@@ -1,13 +1,13 @@
-departurelocation: 36-626 or 651-973
-departurestation: 38-134 or 142-966
-departureplatform: 32-465 or 489-972
-departuretrack: 40-420 or 446-973
-departuredate: 38-724 or 738-961
-departuretime: 30-358 or 377-971
-arrivallocation: 48-154 or 166-965
-arrivalstation: 48-669 or 675-968
-arrivalplatform: 27-255 or 276-965
-arrivaltrack: 37-700 or 720-955
+departure location: 36-626 or 651-973
+departure station: 38-134 or 142-966
+departure platform: 32-465 or 489-972
+departure track: 40-420 or 446-973
+departure date: 38-724 or 738-961
+departure time: 30-358 or 377-971
+arrival location: 48-154 or 166-965
+arrival station: 48-669 or 675-968
+arrival platform: 27-255 or 276-965
+arrival track: 37-700 or 720-955
 class: 50-319 or 332-958
 duration: 35-822 or 835-949
 price: 40-791 or 802-951

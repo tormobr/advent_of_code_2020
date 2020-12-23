@@ -1,11 +1,8 @@
-from copy import deepcopy
 import math
-from collections import deque, defaultdict
-from functools import reduce
-from operator import mul
-import itertools
+from copy import deepcopy
 import numpy as np
-import re
+from operator import mul
+from functools import reduce
 
 import sys
 sys.path.insert(0,'..')
@@ -138,8 +135,6 @@ def create_image():
 
 def part_1():
     _, ids = create_image()
-    for c in ids:
-        print(c)
     return reduce(mul, [ids[0][0], ids[0][-1], ids[-1][0], ids[-1][-1]])
 
 def part_2():
